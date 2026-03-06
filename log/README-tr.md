@@ -3,7 +3,6 @@
 [![Lisans: MIT](https://img.shields.io/badge/Lisans-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://openjdk.java.net/)
 [![Redis](https://img.shields.io/badge/Redis-5.0%2B-red.svg)](https://redis.io/)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.seyfcover/worker-runtime)](https://central.sonatype.com/artifact/io.github.seyfcover/worker-runtime)
 
 FunctionWorker, Java için destekleyici Redis tabanlı, hafif, **anotasyon güdümlü dağıtık iş kuyruğu** ve arka plan worker altyapısıdır.
 
@@ -87,13 +86,28 @@ FunctionWorker, yerleşik bir dashboard ile birlikte gelir (örnek uygulamamızd
 
 ---
 
-## 🛠️ Kurulum
+## 🛠️ Detaylı Kurulum ve Entegrasyon Rehberi
 
-Aşağıdaki bağımlılığı uygulamanızın `pom.xml` dosyasına ekleyin:
+FunctionWorker'ı projenize dahil etmek oldukça basittir. İşte adım adım rehber:
+
+### 1. Kütüphaneyi Sisteminize İndirin (Build & Install)
+Henüz Maven Central'da olmadığı için, kaynak kodunu indirip yerel Maven deponuza (`.m2`) kurmanız gerekir:
+
+```bash
+# Repo'yu klonlayın
+git clone https://github.com/seyfcover/functionworker-java.git
+cd functionworker-java
+
+# Runtime kütüphanesini derleyip kurun
+mvn clean install -f worker-runtime/pom.xml
+```
+
+### 2. Projenize Bağımlılık Olarak Ekleyin
+Kendi uygulamanızın (API Gateway veya Worker projesi) `pom.xml` dosyasına şu bağımlılığı ekleyin:
 
 ```xml
 <dependency>
-    <groupId>io.github.seyfcover</groupId>
+    <groupId>com.functionworker</groupId>
     <artifactId>worker-runtime</artifactId>
     <version>1.0.0</version>
 </dependency>
