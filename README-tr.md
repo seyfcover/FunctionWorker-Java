@@ -95,8 +95,8 @@ Henüz Maven Central'da olmadığı için, kaynak kodunu indirip yerel Maven dep
 
 ```bash
 # Repo'yu klonlayın
-git clone https://github.com/seyfcover/functionworker.git
-cd functionworker
+git clone https://github.com/seyfcover/functionworker-java.git
+cd functionworker-java
 
 # Runtime kütüphanesini derleyip kurun
 mvn clean install -f worker-runtime/pom.xml
