@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://openjdk.java.net/)
 [![Redis](https://img.shields.io/badge/Redis-5.0%2B-red.svg)](https://redis.io/)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.seyfcover/worker-runtime)](https://central.sonatype.com/artifact/io.github.seyfcover/worker-runtime)
 
 FunctionWorker is a lightweight, **annotation-driven distributed job queue** and background worker runtime for Java, backed by Redis. 
 
@@ -86,28 +87,13 @@ FunctionWorker comes with a built-in dashboard (available at `http://localhost:8
 
 ---
 
-## 🛠️ Step-by-Step Integration Guide
+## 🛠️ Installation
 
-Integrating FunctionWorker into your project is straightforward. Follow these steps:
-
-### 1. Build & Install the Library
-Since it's not yet on Maven Central, you need to build the source and install it to your local Maven repository (`.m2`):
-
-```bash
-# Clone the repository
-git clone https://github.com/seyfcover/functionworker.git
-cd functionworker
-
-# Build and install the core runtime
-mvn clean install -f worker-runtime/pom.xml
-```
-
-### 2. Add Dependency to Your Project
-Add the following dependency to your application's (API Gateway or Worker project) `pom.xml`:
+Add the following dependency to your application's `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.functionworker</groupId>
+    <groupId>io.github.seyfcover</groupId>
     <artifactId>worker-runtime</artifactId>
     <version>1.0.0</version>
 </dependency>
