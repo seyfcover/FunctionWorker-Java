@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FunctionWorker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-900">
+    <nav class="border-b bg-white px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-indigo-600">FunctionWorker Dashboard</h1>
+            <div class="flex items-center space-x-2">
+                <span class="relative flex h-3 w-3">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span class="text-sm font-medium text-slate-500">Live Update</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 space-y-8">
+        <!-- Cluster Header -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-slate-500 text-sm font-semibold uppercase tracking-wider">Active Nodes</h3>
+                <p id="node-count" class="text-4xl font-bold mt-2 text-indigo-600">0</p>
+            </div>
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-slate-500 text-sm font-semibold uppercase tracking-wider">Total Queues</h3>
+                <p id="queue-count" class="text-4xl font-bold mt-2 text-indigo-600">0</p>
+            </div>
+            <div class="glass p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="text-slate-500 text-sm font-semibold uppercase tracking-wider">Scheduled Jobs</h3>
+                <p id="scheduled-count" class="text-4xl font-bold mt-2 text-orange-500">0</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Active Nodes List -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                    <h2 class="font-bold text-lg">Active Worker Nodes</h2>
+                </div>
+                <div id="nodes-list" class="divide-y divide-slate-100 p-2">
+                    <!-- Nodes will be injected here -->
+                </div>
+            </div>
+
+            <!-- Queues List -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                    <h2 class="font-bold text-lg">Queue Status</h2>
+                </div>
+                <div id="queues-list" class="divide-y divide-slate-100 p-2">
+                    <!-- Queues will be injected here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/fw/stats');
+                const data = await response.json();
+
+                updateDashboard(data);
+            } catch (err) {
+                console.error("Dashboard update failed", err);
+            }
+        }
+
+        function updateDashboard(data) {
+            // Count Update
+            document.getElementById('node-count').innerText = data.activeNodes?.length || 0;
+            document.getElementById('queue-count').innerText = Object.keys(data.queues || {}).length || 0;
+            document.getElementById('scheduled-count').innerText = data.scheduledCount || 0;
+
+            // Nodes List
+            const nodesContainer = document.getElementById('nodes-list');
+            nodesContainer.innerHTML = (data.activeNodes || []).map(node => `
+                <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold">${node.hostname}</p>
+                            <p class="text-xs text-slate-400">Workers: ${node.workers}</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">ACTIVE</span>
+                </div>
+            `).join('');
+
+            // Queues List
+            const queuesContainer = document.getElementById('queues-list');
+            queuesContainer.innerHTML = Object.entries(data.queues || {}).map(([name, size]) => `
+                <div class="p-4 flex justify-between items-center hover:bg-slate-50 transition-colors">
+                    <div>
+                        <p class="font-bold text-slate-700">${name}</p>
+                        <p class="text-xs text-slate-400">Queue Name: fw:queue:${name}</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-2xl font-bold ${size > 50 ? 'text-red-500' : 'text-slate-700'}">${size}</span>
+                        <span class="text-xs text-slate-400">pending</span>
+                    </div>
+                </div>
+            `).join('') || '<p class="p-4 text-slate-400 text-center italic">No active jobs in queue</p>';
+        }
+
+        // Auto Refresh every 2 seconds
+        setInterval(fetchStats, 2000);
+        fetchStats();
+    </script>
+</body>
+
+</html>

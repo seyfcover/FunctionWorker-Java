@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: example-app
+
+# FunctionWorker Config
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+
+# Control mode via environment variable (worker, dispatcher, combined)
+fw:
+  mode: ${APP_MODE:combined}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.fw: INFO
+    com.example: INFO
