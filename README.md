@@ -96,7 +96,7 @@ Since it's not yet on Maven Central, you need to build the source and install it
 ```bash
 # Clone the repository
 git clone https://github.com/seyfcover/functionworker-java.git
-cd functionworker
+cd functionworker-java
 
 # Build and install the core runtime
 mvn clean install -f worker-runtime/pom.xml
