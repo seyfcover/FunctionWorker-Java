@@ -4,7 +4,7 @@
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://openjdk.java.net/)
 [![Redis](https://img.shields.io/badge/Redis-5.0%2B-red.svg)](https://redis.io/)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.seyfcover/worker-runtime)](https://central.sonatype.com/artifact/io.github.seyfcover/worker-runtime)
-[![CI](https://github.com/seyfcover/FunctionWorker-Java/actions/workflows/ci.yml/badge.svg)](https://github.com/seyfcover/FunctionWorker-Java/actions/workflows/ci.yml)
+
 
 FunctionWorker is a lightweight, **annotation-driven distributed job queue** and background worker runtime for Java, backed by Redis.
 
